@@ -164,7 +164,7 @@ public class FormTab extends JFrame{
     }
        
     public static void main(String[] args) {
-        run(new FormTab(), 550, 400);
+        run(new FormTab(), 570, 400);
     }
 }
 
