@@ -26,9 +26,8 @@ public class FormTab extends JFrame{
     private JTextField 
             txtFile = new JTextField(21),
             txtNumber = new JTextField(21);
-    private JTextArea 
-            textF = new JTextArea(""),
-            text = new JTextArea("");
+    private FormAnswer answer = new FormAnswer(),
+            answerFile = new FormAnswer();
     private JMenuBar mb = new JMenuBar();
     private JMenu 
             mCreate =  new JMenu("Формирование КЧ"), 
@@ -72,9 +71,7 @@ public class FormTab extends JFrame{
         //вкладка один номер
         jpOne.add(new Label("Введите номер:"));
         jpOne.add(txtNumber);
-        
-        JPanel answer = new FormAnswer().FormAnswerCreate(jpOne, text);
-
+      
         //вкладка файл
         jpFile.setLayout(new GridLayout(3, 2));
         jpFile.add(new Label("Введите имя текстового файла (*.txt):"));
@@ -91,12 +88,12 @@ public class FormTab extends JFrame{
                 int i = fch.showOpenDialog(FormTab.this);
                 if (i == JFileChooser.APPROVE_OPTION) {
                     absoluteFileName = fch.getSelectedFile().getAbsolutePath();
-                    textF.setText("\nВыбран файл - '" + absoluteFileName + "'\n");
+                    //textF.setText("\nВыбран файл - '" + absoluteFileName + "'\n");
+                    answerFile.setText("\nВыбран файл - '" + absoluteFileName + "'\n");
                     txtFile.setText(absoluteFileName);
                 }
             }
-        });     
-        JPanel answerFile = new FormAnswer().FormAnswerCreate(jpFile, textF);
+        });   
 
         //панель кнопок
         jpButtons.add(bRun);
@@ -106,25 +103,30 @@ public class FormTab extends JFrame{
                 String sa = "";
                 if (tab.getSelectedIndex() == 0) {//вкладка 0 - работа с одним номером                    
                     try{
-                        text.setText(new Number().getAnswer(txtNumber.getText()));
+                        answer.setText(new Number().getAnswer(txtNumber.getText()));
+                        //text.setText(new Number().getAnswer(txtNumber.getText()));
                         //"Контрольное число " + s + "\nПолный номер - " + numCur + s;
                     }catch (EInvalidParam ex) {
-                        text.setText(txtNumber.getText() +" - " +ex.getMessage());
+                        answer.setText(txtNumber.getText() +" - " +ex.getMessage());
+                        //text.setText(txtNumber.getText() +" - " +ex.getMessage());
                 }
                 } else {//вкладка 1 - работа с файлом
                     if (!txtFile.getText().isEmpty()) {
-                        textF.setText("\nВыбран файл - '" + txtFile.getText() + "'\n");
+                        //textF.setText("\nВыбран файл - '" + txtFile.getText() + "'\n");
+                        answerFile.setText("\nВыбран файл - '" + txtFile.getText() + "'\n");
                         try{
                             sa = new NumbersInFile().getAnswer(txtFile.getText());
                         }catch (EReadWriteFile ex){
-                            textF.append(ex.getMessage());
+                            answerFile.appendText(ex.getMessage());
+                            //textF.append(ex.getMessage());
                             new Dialog(null, ex.getMessage()).setVisible(true);
                         }
                     } else {
                         new Dialog(null, "Выберете файл").setVisible(true);                        
                     }
                 }
-                    textF.append(sa);
+                    //textF.append(sa);
+                    answerFile.appendText(sa);
                     absoluteFileName = "";                
             }
         }
@@ -135,9 +137,11 @@ public class FormTab extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 txtNumber.setText("");
                 if (tab.getSelectedIndex() == 0) {
-                    text.setText("");
+                    //text.setText("");
+                    answer.setText("");
                 } else {
-                    textF.setText("");
+                    //textF.setText("");
+                    answerFile.setText("");
                     txtFile.setText("");
                 }
             }
@@ -151,11 +155,9 @@ public class FormTab extends JFrame{
         });        
         
         //панель вкладок
-        tab.addTab("Работа с одним номером", answer);
-        /*jp.add(BorderLayout.NORTH, top);
-        jp.add(BorderLayout.CENTER, jpA);*/
-        
-        tab.addTab("Выбор файла", answerFile);
+
+        tab.addTab("Работа с одним номером", answer.FormAnswerCreate(jpOne));    
+        tab.addTab("Выбор файла", answerFile.FormAnswerCreate(jpFile));
 
         add(BorderLayout.SOUTH,jpButtons);
         add(tab);        

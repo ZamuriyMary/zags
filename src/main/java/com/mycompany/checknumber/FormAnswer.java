@@ -13,16 +13,30 @@ import javax.swing.border.*;
  *
  * @author Mary <m.zamury@gmail.com>
  */
-public class FormAnswer {
-        public JPanel FormAnswerCreate(JPanel top, JTextArea txt){
-        JPanel jp = new JPanel(), jpA = new JPanel();
+public class FormAnswer extends JPanel{
+    JPanel jpA = new JPanel();
+    private JTextArea text = new JTextArea("");
+
+    public FormAnswer() {
         jpA.setLayout(new BorderLayout());
-        jpA.setBorder(new TitledBorder("Результат:"));        
-        jpA.add(BorderLayout.CENTER, txt); 
-        jpA.add(new JScrollPane(txt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));  
+        jpA.setBorder(new TitledBorder("Результат:"));
+        jpA.add(BorderLayout.CENTER, text);
+        jpA.add(new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));        
+    }
+
+    public JPanel FormAnswerCreate(JPanel top) {
+        JPanel jp = new JPanel();
         jp.setLayout(new BorderLayout());
         jp.add(BorderLayout.NORTH, top);
-        jp.add(BorderLayout.CENTER, jpA);        
+        jp.add(BorderLayout.CENTER, jpA);
         return jp;
-        }
+    }
+
+    public void setText(String str) {
+        text.setText(str);
+    }
+    
+    public void appendText(String str) {
+        text.append(str);
+    }    
 }
