@@ -17,12 +17,11 @@ public class Number {
     private Integer[] numericRead = new Integer[20];
     private String numCur;
 
-    public Number() {
-        
+    public Number() {        
         Arrays.fill(numericRead, 0);
     }
     
-    private boolean validate(String numCur) throws EInvalidParam{
+    private String validate(String numCur) throws EInvalidParam{
         this.numCur = numCur;
         numCur.trim();
         if ((numCur.length() > 20) | (numCur.length() < 18)) {
@@ -43,7 +42,8 @@ public class Number {
         if (numericRead[1] > 7) { throw new EInvalidParam("неверный номер: 2-я цифра не может быть больше 7"); }
         if (numericRead[1] == 0) { throw new EInvalidParam("неверный номер: 2-я цифра не может быть равна 0"); }
         if (numericRead[18] > 1) { throw new EInvalidParam("неверный номер: \n19-я (предпоследняя) цифра должна быть 0 или 1"); }
-        return true;        
+        if (numericRead[19] != 0) { throw new EInvalidParam("неверный номер: \n20-я (последняя) цифра должна быть 0"); }
+        return numCur;        
     }  
   
     //@return возвращает контрольное число
@@ -64,7 +64,6 @@ public class Number {
     }  
     
     public String getAnswer(String num) throws EInvalidParam {
-        validate(num);
-        return numCur + checkNumber().toString();
+            return validate(num) + checkNumber().toString();
     }
 }
