@@ -39,7 +39,7 @@ public class NumbersInFile {
     private void checkup() {
         for (String num : numbers) {
             try{
-                numbersCur.add(new Number(num).pushAnswerForFile());
+                numbersCur.add(new Number().getAnswer(num));
             }catch (EInvalidParam ex){
                 numbersErr.add(num + " - " + ex.getMessage());
             }      

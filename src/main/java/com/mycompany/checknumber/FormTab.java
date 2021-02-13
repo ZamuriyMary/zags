@@ -72,6 +72,7 @@ public class FormTab extends JFrame{
         //вкладка один номер
         jpOne.add(new Label("Введите номер:"));
         jpOne.add(txtNumber);
+        
         JPanel answer = new FormAnswer().FormAnswerCreate(jpOne, text);
 
         //вкладка файл
@@ -105,7 +106,8 @@ public class FormTab extends JFrame{
                 String sa = "";
                 if (tab.getSelectedIndex() == 0) {//вкладка 0 - работа с одним номером                    
                     try{
-                        text.setText(new Number(txtNumber.getText()).getAnswer());
+                        text.setText(new Number().getAnswer(txtNumber.getText()));
+                        //"Контрольное число " + s + "\nПолный номер - " + numCur + s;
                     }catch (EInvalidParam ex) {
                         text.setText(txtNumber.getText() +" - " +ex.getMessage());
                 }
@@ -150,6 +152,9 @@ public class FormTab extends JFrame{
         
         //панель вкладок
         tab.addTab("Работа с одним номером", answer);
+        /*jp.add(BorderLayout.NORTH, top);
+        jp.add(BorderLayout.CENTER, jpA);*/
+        
         tab.addTab("Выбор файла", answerFile);
 
         add(BorderLayout.SOUTH,jpButtons);

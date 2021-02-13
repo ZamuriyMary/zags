@@ -17,12 +17,13 @@ public class Number {
     private Integer[] numericRead = new Integer[20];
     private String numCur;
 
-    public Number(String numCur) {
-        this.numCur = numCur;
+    public Number() {
+        
         Arrays.fill(numericRead, 0);
     }
     
-    private boolean validate() throws EInvalidParam{
+    private boolean validate(String numCur) throws EInvalidParam{
+        this.numCur = numCur;
         numCur.trim();
         if ((numCur.length() > 20) | (numCur.length() < 18)) {
             throw new EInvalidParam("неверное количество символов");
@@ -35,8 +36,12 @@ public class Number {
         //номер-строку переводим в массив цифр
         try {
             for (int i = 0; i < numCur.length(); i++) {
-                String s = numCur.substring(i, i + 1);
-                numericRead[i] = Integer.valueOf(s);
+//                String s = numCur.substring(i, i + 1);
+//                numericRead[i] = Integer.valueOf(s);
+                int digit = numCur.charAt(i) - '0';
+                //int digit = "0123456789".indexOf(numCur.charAt(i));
+                if (digit < 0 || digit > 9) { throw new EInvalidParam("не цифра в позиции " + i); }
+                numericRead[i] = digit;
             }
         } catch (NumberFormatException e) {throw new EInvalidParam("неверный номер");}
         
@@ -66,15 +71,9 @@ public class Number {
         if (chNum != 0) chNum = 10 - chNum;
         return chNum;
     }  
-            
-    public String getAnswer() throws EInvalidParam { 
-        validate();
-        String s = checkNumber().toString();
-        return "Контрольное число " + s + "\nПолный номер - " + numCur + s;
-    }
     
-    public String pushAnswerForFile() throws EInvalidParam {
-        validate();
+    public String getAnswer(String num) throws EInvalidParam {
+        validate(num);
         return numCur + checkNumber().toString();
     }
 }
