@@ -21,8 +21,8 @@ public class Number {
         Arrays.fill(numericRead, 0);
     }
     
-    private String validate(String numCur) throws EInvalidParam{
-        this.numCur = numCur;
+    private String validate(String num) throws EInvalidParam{
+        numCur = num;
         numCur.trim();
         if ((numCur.length() > 20) | (numCur.length() < 18)) {
             throw new EInvalidParam("неверное количество символов");
@@ -34,7 +34,7 @@ public class Number {
             for (int i = 0; i < numCur.length(); i++) {
                 int digit = numCur.charAt(i) - '0';
                 //int digit = "0123456789".indexOf(numCur.charAt(i));
-                if (digit < 0 || digit > 9) { throw new EInvalidParam("не цифра в позиции " + i+1); }
+                if (digit < 0 || digit > 9) { throw new EInvalidParam("не цифра в позиции " + (i+1)); }
                 numericRead[i] = digit;
             }
        

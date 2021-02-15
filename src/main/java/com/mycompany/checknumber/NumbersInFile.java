@@ -15,60 +15,48 @@ import java.util.*;
  * @author Mary <m.zamury@gmail.com>
  */
 public class NumbersInFile {
-
-    private ArrayList<String> numbers = new ArrayList(),
-            numbersCur = new ArrayList(),
-            numbersErr = new ArrayList();
-    String fileName, fileNameAnswer = "", fileNameAnswerErr = "";
-    boolean ok = true;
+    String fileName = "", fileNameAnswer = "", fileNameAnswerErr = "";
+    boolean flagAns = false, flagErr = false;
     
-    private void read(String filename) throws EReadWriteFile{
-        this.fileName = filename;
-        String s;
-        try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
+    private void readWrite() throws EReadWriteFile {
+        try (BufferedReader in = new BufferedReader(new FileReader(fileName))) {
+            PrintWriter out = new PrintWriter(fileNameAnswer);
+            PrintWriter outErr = new PrintWriter(fileNameAnswerErr);
+            Number num = new Number();
+            String s;
             while ((s = in.readLine()) != null) {
                 s = s.trim();
-                if (!s.isEmpty()) numbers.add(s);
+                if (!s.isEmpty()) {
+                    try {
+                        s = num.getAnswer(s);
+                        out.println(s);
+                        flagAns = true;
+                    } catch (EInvalidParam ex) {
+                        s = s + " - " + ex.getMessage();
+                        outErr.println(s);
+                        flagErr = true;
+                    }
+                }
             }
-        }catch (IOException e){
+            out.close();
+            outErr.close();
+        } catch (IOException e) {
             throw new EReadWriteFile("Ошибка при чтении файла");
         }
     }
     
-    //@return формирует массивы номеров (с КЧ) и массив ошибочных номеров
-    private void checkup() {
-        for (String num : numbers) {
-            try{
-                numbersCur.add(new Number().getAnswer(num));
-            }catch (EInvalidParam ex){
-                numbersErr.add(num + " - " + ex.getMessage());
-            }      
-        }
+    private String[] createAnswer(String fileName) throws EReadWriteFile {
+        this.fileName = fileName;
+        fileNameAnswer = fileName + "_Answer_" + LocalDateTime.now() + ".txt"; 
+        fileNameAnswerErr = fileName + "_Error_" + LocalDateTime.now() + ".txt"; 
+        readWrite();
+        String[] s = new String[2];        
+        if (flagAns) {s[0] = fileNameAnswer;}
+        if (flagErr) {s[1] = fileNameAnswerErr;}
+        return s;
     }
-    
-    private String write() throws EReadWriteFile {
-        String result = "";
-        if (!numbersCur.isEmpty()) {
-            fileNameAnswer = fileName + "_Answer_" + LocalDateTime.now();            
-            if (new WriteFile().write(fileNameAnswer, numbersCur)) {
-                result += "\nСформирован файл-ответ: " + fileNameAnswer + "\n";
-                fileNameAnswer = "";
-            }
-        }
-        if (!numbersErr.isEmpty()) {
-            fileNameAnswerErr = fileName + "_Error_" + LocalDateTime.now();            
-            if (new WriteFile().write(fileNameAnswerErr, numbersErr)) {
-                result += "\nВ исходных данных есть ошибочные номера!\nСписок неверных номеров: '" + fileNameAnswerErr + "'\n";
-                fileNameAnswerErr = "";
-            }
-        }
-        return result;
-    }  
 
-    //@return возвращает имя файла-ответа и имя файла с ошибочными номерами
-    public String getAnswer(String filename) throws EReadWriteFile {
-        read(filename);
-        checkup();
-        return write();
+    public String[] getAnswer(String file) throws EReadWriteFile {
+        return createAnswer(file);
     }
 }
