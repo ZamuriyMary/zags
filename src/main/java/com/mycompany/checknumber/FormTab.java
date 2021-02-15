@@ -109,6 +109,7 @@ public class FormTab extends JFrame{
                 }
                 } else {//вкладка 1 - работа с файлом
                     if (!txtFile.getText().isEmpty()) {
+                        answerFile.setText("\nВыбран файл - '" + txtFile.getText() + "'\n");
                         try{
                             s = new NumbersInFile().getAnswer(txtFile.getText());
                             if (!s[0].isEmpty()) {
